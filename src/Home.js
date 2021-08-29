@@ -35,10 +35,23 @@ const Home = () => {
     setBlog(newBlogs);
   };
 
+  /*
   useEffect(() => {
     console.log("use effect run here");
     console.log(blogs);
   }, [name]);
+*/
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/blogs')
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        console.log(data['data']);
+      });
+  }, []);
+
 
   return (
     <div className="home">
