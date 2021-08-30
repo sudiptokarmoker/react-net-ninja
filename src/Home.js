@@ -2,44 +2,15 @@ import { useEffect, useState } from "react";
 import BlogLists from "./BlogLists";
 
 const Home = () => {
-    const [blogs, setBlog] = useState(null);
-    const [name, setName] = useState('maria');
-    const [blogs, setBlogs] = useState(null);
-    const [name, setName] = useState("James");
-    const [isLoading, setIsLoading] = useState(true);
+  const [blogs, setBlogs] = useState(null);
+  const [name, setName] = useState("James");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleDelete = (id) => {
     const newBlogs = blogs.filter((blog) => blog.id !== id);
     setBlogs(newBlogs);
   };
-
-    /*
-    useEffect(() => {
-        console.log("use effect run here");
-        console.log(blogs);
-    })*/
-    /**
-     * use effect if there is need to run only one first time load: like in jquery
-     * $(document).ready(function(){
-     *  // onload code 
-     * });
-     *  */ 
-    useEffect(() => {
-        console.log("use effect trigger here");
-        console.log(blogs);
-    }, [name]); // this name array is dependency hook. it will just trigger if this matches on staging. value change or anything else.
-
-    return (
-        <div className="home">
-            <BlogLists blogsListData={blogs} title="Blog post" handleDelete={handleDelete}/>
-            {/* <BlogLists blogsListData={blogs.filter((blog) => blog.author === 'mario')} title="Maris post"/> */}
-            <button onClick={() => setName('jag hira')}>Change name</button>
-            <p>{name}</p>
-        </div>
-    );
-}
- 
-export default Home;
 
   /*
   useEffect(() => {
@@ -60,15 +31,19 @@ export default Home;
       .then(data => {
         setBlogs(data.data.blogs);
         setIsLoading(false);
+        setError(null);
       })
       .catch(err => {
-          console.log(err.message);
+          //console.log(err.message);
+          setIsLoading(false);
+          setError(err.message);
       });
   }, []);
 
 
   return (
     <div className="home">
+    { error && <div> { error } </div> }
     {isLoading && <div>Loading ....</div>}
     {blogs && <BlogLists blogsListData={blogs} title="Blog post" handleDelete={handleDelete}/>}
       {/* <BlogLists blogsListData={blogs.filter((blog) => blog.author === 'mario')} title="Maris post"/> */}
