@@ -1,54 +1,31 @@
 import { useEffect, useState } from "react";
 import BlogLists from "./BlogLists";
+import useFetch from "./useFetch";
 
 const Home = () => {
-  const [blogs, setBlogs] = useState(null);
-  const [name, setName] = useState("James");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const handleDelete = (id) => {
-    const newBlogs = blogs.filter((blog) => blog.id !== id);
-    setBlogs(newBlogs);
-  };
-
+  const { data: blogs, isLoading, error } = useFetch('http://localhost:8000/api/blogs');
+  //const [name, setName] = useState("James");
+  // const handleDelete = (id) => {
+  //   const newBlogs = blogs.filter((blog) => blog.id !== id);
+  //   setBlogs(newBlogs);
+  // };
   /*
   useEffect(() => {
     console.log("use effect run here");
     console.log(blogs);
   }, [name]);
 */
-
-  useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/blogs')
-      .then(res => {
-        if(!res.ok){
-          throw Error("could not fetch the data");
-        }
-        //console.log(res);
-        return res.json();
-      })
-      .then(data => {
-        setBlogs(data.data.blogs);
-        setIsLoading(false);
-        setError(null);
-      })
-      .catch(err => {
-          //console.log(err.message);
-          setIsLoading(false);
-          setError(err.message);
-      });
-  }, []);
-
-
+/**
+ * existing useEffect code was here
+ */
   return (
     <div className="home">
     { error && <div> { error } </div> }
     {isLoading && <div>Loading ....</div>}
-    {blogs && <BlogLists blogsListData={blogs} title="Blog post" handleDelete={handleDelete}/>}
+    {blogs && <BlogLists blogsListData={blogs} title="Blog post"/>}
       {/* <BlogLists blogsListData={blogs.filter((blog) => blog.author === 'mario')} title="Maris post"/> */}
-      <button onClick={() => setName("Linkon")}>Change Name</button>
-      <p>{name}</p>
+      {/* <button onClick={() => setName("Linkon")}>Change Name</button> */}
+      {/* <p>{name}</p> */}
     </div>
   );
 };
