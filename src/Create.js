@@ -7,7 +7,16 @@ const Create = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const blog = {title, body, author};
-        console.log(blog);
+        fetch('http://localhost:8000/api/blogs/create', {
+            method: 'POST',
+            header: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(blog)
+        }).then((data) => {
+            console.log("created .... ");
+            console.log(data);
+        });
     }
 
     return (
