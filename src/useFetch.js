@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 
-const useFetch = (url) => {
+const useFetch = (url, id = null) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(url)
+    
+    const abortCont = new AbortController();
+    fetch(url, { signal: abortCont.signal })
       .then((res) => {
         if (!res.ok) {
           throw Error("could not fetch the data");
@@ -14,14 +16,25 @@ const useFetch = (url) => {
         return res.json();
       })
       .then((data) => {
-        setData(data.data.blogs);
+        //console.log(data['title']);
+        if(id !== null){
+          setData(data);
+        } else {
+          setData(data.data.blogs);
+        }
         setIsLoading(false);
         setError(null);
       })
       .catch((err) => {
-        setIsLoading(false);
-        setError(err.message);
+        if(err.name === 'AbortError'){
+           console.log("Fetch Aborted");
+        } else {
+          setIsLoading(false);
+          setError(err.message);
+        }
       });
+      //return () => console.log("cleanup");
+      return () => abortCont.abort();
   }, [url]);
 
   return { data, isLoading, error }
