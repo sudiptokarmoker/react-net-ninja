@@ -6,7 +6,6 @@ const useFetch = (url, id = null) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    
     const abortCont = new AbortController();
     fetch(url, { signal: abortCont.signal })
       .then((res) => {
@@ -18,7 +17,8 @@ const useFetch = (url, id = null) => {
       .then((data) => {
         //console.log(data['title']);
         if(id !== null){
-          setData(data);
+         // console.log(data.data);
+          setData(data.data);
         } else {
           setData(data.data.blogs);
         }
